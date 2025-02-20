@@ -1,5 +1,3 @@
 {
-  # Add your NixOS modules here
-  #
-  # my-module = ./my-module;
+  smartdns-rs = ./services/network/smartdns-rs.nix;
 }

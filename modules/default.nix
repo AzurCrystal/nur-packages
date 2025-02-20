@@ -1,3 +1,4 @@
+self: nixpkgs:
 {
-  smartdns-rs = ./services/network/smartdns-rs.nix;
+  smartdns-rs = (import ./services/network/smartdns-rs.nix self);
 }

@@ -1,4 +1,4 @@
-{ lib, pkgs, config, ... }:
+self: { lib, pkgs, config, ... }:
 
 with lib;
 
@@ -32,6 +32,12 @@ in
       description = "DNS listening port number.";
     };
 
+    package = mkOption {
+      type = types.package;
+      default = self.packages.${pkgs.system}.smartdns-rs ;
+      description = "Package used by smartdns";
+    };
+
     settings = mkOption {
       type =
         let atom = oneOf [ str int bool ];
@@ -56,7 +62,7 @@ in
   config = lib.mkIf cfg.enable {
     services.smartdns-rs.settings.bind = mkDefault ":${toString cfg.bindPort}";
 
-    systemd.packages = [ pkgs.smartdns-rs ];
+    systemd.packages = [ cfg.package ];
     systemd.services.smartdns-rs.wantedBy = [ "multi-user.target" ];
     systemd.services.smartdns-rs.restartTriggers = [ confFile ];
     systemd.services.smartdns-rs.serviceConfig = {

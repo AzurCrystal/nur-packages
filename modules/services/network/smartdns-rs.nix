@@ -28,13 +28,13 @@ in
 
     bindPort = mkOption {
       type = types.port;
-      default = 53;
+      default = 5353;
       description = "DNS listening port number.";
     };
 
     package = mkOption {
       type = types.package;
-      default = self.packages.${pkgs.system}.smartdns-rs ;
+      default = self.packages.${pkgs.system}.smartdns-rs;
       description = "Package used by smartdns";
     };
 
@@ -62,16 +62,19 @@ in
   config = lib.mkIf cfg.enable {
     services.smartdns-rs.settings.bind = mkDefault ":${toString cfg.bindPort}";
 
-    systemd.packages = [ cfg.package ];
-    systemd.services.smartdns-rs.wantedBy = [ "multi-user.target" ];
-    systemd.services.smartdns-rs.restartTriggers = [ confFile ];
-    systemd.services.smartdns-rs.serviceConfig = {
-      CapabilityBoundingSet = "CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE";
-      AmbientCapabilities = "CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE";
+    systemd.services.smartdns-rs = {
+      wantedBy = [ "multi-user.target" ];
+      restartTriggers = [ confFile ];
+      serviceConfig = {
+        Type = "simple";
+        CapabilityBoundingSet = "CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE";
+        AmbientCapabilities = "CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE";
+        PIDFile = "/run/smartdns.pid";
+        ExecStart = "${lib.getExe cfg.package} run -p /run/smartdns.pid";
+        Restart = "always";
+      };
+      after = [ "network.target" ];
     };
-    systemd.services.smartdns-rs.after = [
-      "network.target"
-    ];
     environment.etc."smartdns/smartdns.conf".source = confFile;
   };
 }

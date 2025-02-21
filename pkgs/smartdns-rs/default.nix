@@ -1,4 +1,5 @@
-{ rustPlatform
+{ lib
+, rustPlatform
 , fetchFromGitHub
 , llvmPackages
 }:
@@ -29,4 +30,11 @@ rustPlatform.buildRustPackage rec {
 
   useFetchCargoVendor = true;
   cargoHash = "sha256-oCRDD+BiAmrjUbiWCWsXB3j7WazJbWSN7UPEBpLA2mU=";
+
+  meta = with lib; {
+    description = "A cross platform local DNS server to obtain the fastest website IP for the best Internet experience.";
+    homepage = "https://github.com/mokeyish/smartdns-rs";
+    license = licenses.gpl3Only;
+    mainProgram = "smartdns";
+  };
 }

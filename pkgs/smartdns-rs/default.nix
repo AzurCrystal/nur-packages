@@ -26,6 +26,8 @@ rustPlatform.buildRustPackage rec {
     "--skip=dns_client::"
     "--skip=infra::ping::"
     "--skip=dns_mw_ns::"
+    "--skip=infra::os_release::"
+    "--skip=dns_mw_cache::"
   ];
 
   useFetchCargoVendor = true;

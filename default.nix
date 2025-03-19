@@ -6,7 +6,9 @@
 # commands such as:
 #     nix-build -A mypackage
 
-{ pkgs ? import <nixpkgs> { } }:
+{
+  pkgs ? import <nixpkgs> { },
+}:
 
 {
   # The `lib`, `modules`, and `overlays` names are special
@@ -15,6 +17,8 @@
   overlays = import ./overlays; # nixpkgs overlays
 
   smartdns-rs = pkgs.callPackage ./pkgs/smartdns-rs { };
-  # some-qt5-package = pkgs.libsForQt5.callPackage ./pkgs/some-qt5-package { };
-  # ...
+  hd-idle = pkgs.callPackage ./pkgs/hd-idle { };
+
+  # already abandoned by Rust Compiler and its owner
+  # serverstatus-rust = pkgs.callPackage ./pkgs/serverstatus-rust { };
 }
